@@ -86,8 +86,11 @@ const bars1 = ref<GanttBarObject[]>([
             id: "8621987329",
             hasHandles: true,
             label: "I'm in a bundle",
-            bundle: "bundle2",
-            html: '<div>123</div>',
+            // bundle: "bundle2",
+            style: {
+                background: '#eee',
+                borderRadius: '40px'
+            }
         }
     }
 ])
