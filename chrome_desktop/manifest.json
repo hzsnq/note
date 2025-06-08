@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "吉格桌面",
+  "author": "还只是年轻",
+  "version": "1.0",
+  "description": "一款为吉格桌面提供快捷入口的浏览器插件",
+  "icons": {
+    "16": "./icon/icon_16x16.png",
+    "32": "./icon/icon_32x32.png",
+    "48": "./icon/icon_48x48.png",
+    "64": "./icon/icon_64x64.png",
+    "128": "./icon/icon_128x128.png",
+    "256": "./icon/icon_256x256.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "./icon/icon_16x16.png",
+      "32": "./icon/icon_32x32.png",
+      "48": "./icon/icon_48x48.png",
+      "64": "./icon/icon_64x64.png",
+      "128": "./icon/icon_128x128.png",
+      "256": "./icon/icon_256x256.png"
+    },
+    "default_title": "吉格桌面"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["tabs"]
+}

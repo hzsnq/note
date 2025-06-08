@@ -1,0 +1,19 @@
+/*
+  *
+  * 常用混合宏
+*/
+
+/* 单行超出隐藏 */
+@mixin lineEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 多行超出隐藏 */
+@mixin multiEllipsis($lineNumber: 3) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lineNumber;
+  overflow: hidden;
+}

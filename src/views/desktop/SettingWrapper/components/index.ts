@@ -1,0 +1,1 @@
+export { default as ChoosePosition } from './ChoosePosition/ChoosePosition.vue'

@@ -1,0 +1,5 @@
+export { default as ProgramDock } from './ProgramDock/ProgramDock.vue'
+export { default as DesktopWrapper } from './DesktopWrapper/DesktopWrapper.vue'
+export { default as SettingWrapper } from './SettingWrapper/SettingWrapper.vue'
+export { default as DesktopBar } from './DesktopBar/DesktopBar.vue'
+export { default as DesktopSetting } from './DesktopSetting/DesktopSetting.vue'
