@@ -1,8 +1,8 @@
 <template>
-    <el-scrollbar always>
-        <g-gantt-chart :chart-start="chartStart" :width="widthComputed" :chart-end="chartEnd" :precision="dateType" :row-height="80" grid
-            :current-time="showCurrent" current-time-label="今日" bar-start="beginDate" bar-end="endDate" :date-format="format"
-            @click-bar="onClickBar($event.bar, $event.e, $event.datetime)"
+    <el-scrollbar ref="scrollbarRef" always>
+        <g-gantt-chart :chart-start="chartStart" :width="widthComputed" :chart-end="chartEnd" :precision="dateType"
+            :row-height="80" grid :current-time="showCurrent" current-time-label="今日" bar-start="beginDate"
+            bar-end="endDate" :date-format="format" @click-bar="onClickBar($event.bar, $event.e, $event.datetime)"
             @mousedown-bar="onMousedownBar($event.bar, $event.e, $event.datetime)"
             @dblclick-bar="onMouseupBar($event.bar, $event.e, $event.datetime)"
             @mouseenter-bar="onMouseenterBar($event.bar, $event.e)"
@@ -16,11 +16,11 @@
             <g-gantt-row label="" highlight-on-hover :bars="bars4" />
         </g-gantt-chart>
         <div class="fixed">
-            <div class="item" 
-            @click="()=>{showCurrent = !showCurrent}">今日</div>
-            <div class="item" @click="handleSetType('day')">日</div>
-            <div class="item" @click="handleSetType('week')">周</div>
-            <div class="item" @click="handleSetType('month')">月</div>
+            <div class="item" @click="handleScrollCurrent">今日</div>
+            <div :class="item.key === dateType ? 'item act' : 'item'" @click="handleSetType(item.key)"
+                v-for="item in dateTypeList" :key="item.key">
+                {{ item.value }}
+            </div>
         </div>
     </el-scrollbar>
     <button type="button" @click="addBar()">Add bar</button>
@@ -39,16 +39,19 @@ const chartEnd = ref(
     dayjs(chartStart.value, format.value).add(180, "days").format(format.value)
 )
 
-type type = 'day'|'month'|'week'
+type type = 'day' | 'month' | 'week'
 
 const dateType = ref<type>("day")
-const showCurrent = ref(false)
-const widthComputed = computed(()=>{
-    const data:AnyObj = getDateDiffs(chartStart.value,chartEnd.value)
+const showCurrent = ref(true)
+const scrollbarRef = ref<any>(null)
+
+const dateTypeList = ref<AnyObj[]>([{ key: 'day', value: '日' }, { key: 'week', value: '周' }, { key: 'month', value: '月' }])
+const widthComputed = computed(() => {
+    const data: AnyObj = getDateDiffs(chartStart.value, chartEnd.value)
     return `${Math.ceil(data[dateType.value]) * 50}px`
 })
 
-const handleSetType = (val:type)=>{
+const handleSetType = (val: type) => {
     dateType.value = val as any
 }
 
@@ -57,10 +60,22 @@ function getDateDiffs(start: string | Date, end: string | Date) {
     const endDate = dayjs(end);
 
     return {
-        day: endDate.diff(startDate, 'day',true),
-        week: endDate.diff(startDate, 'week',true),
-        month: endDate.diff(startDate, 'month',true)
+        day: endDate.diff(startDate, 'day', true),
+        week: endDate.diff(startDate, 'week', true),
+        month: endDate.diff(startDate, 'month', true)
     };
+}
+
+const handleScrollCurrent = () => {
+    // showCurrent.value = !showCurrent.value
+    if (showCurrent.value) {
+        nextTick(() => {
+            const target: any = document.querySelector('.g-grid-current-time')
+            // console.log(target?.offsetLeft);
+            const left = target?.offsetLeft ? target.offsetLeft - 600 : 0
+            scrollbarRef.value && scrollbarRef.value!.setScrollLeft(left)
+        })
+    }
 }
 
 const bars1 = ref<GanttBarObject[]>([
@@ -71,7 +86,8 @@ const bars1 = ref<GanttBarObject[]>([
             id: "8621987329",
             hasHandles: true,
             label: "I'm in a bundle",
-            bundle: "bundle2"
+            bundle: "bundle2",
+            html: '<div>123</div>',
         }
     }
 ])
@@ -256,20 +272,23 @@ const onContextmenuBar = (bar: GanttBarObject, e: MouseEvent, datetime?: string)
 </script>
 
 <style lang="scss" scoped>
-
-.fixed{
+.fixed {
     display: flex;
     position: absolute;
-    bottom:10px;
-    right:100px;
+    bottom: 10px;
+    right: 100px;
     z-index: 100;
 
-    .item{
+    .item {
         margin-right: 10px;
         padding: 5px 10px;
         border-radius: 5px;
         background-color: #f0f0f0;
         cursor: pointer;
+    }
+
+    .act {
+        background: bisque;
     }
 }
 </style>

@@ -267,7 +267,7 @@ provide(EMIT_BAR_EVENT_KEY, emitBarEvent)
   user-select: none;
   font-variant-numeric: tabular-nums;
   border-radius: 5px;
-  min-width:100%;
+  min-width: 100%;
 }
 
 .with-column {

@@ -2,7 +2,7 @@
   <div class="g-grid-container">
     <div
       v-for="{ label, value, width } in timeAxisUnits.lowerUnits"
-      :key="label"
+      :key="textFormant(label).key"
       class="g-grid-line"
       :style="{
         width,
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import provideConfig from "../provider/provideConfig.js"
-import useTimeAxisUnits from "../composables/useTimeAxisUnits.js"
+import {useTimeAxisUnits,generateRandomKey} from "../composables/useTimeAxisUnits.js"
 
 defineProps<{
   highlightedUnits?: number[]
@@ -22,6 +22,12 @@ defineProps<{
 
 const { colors } = provideConfig()
 const { timeAxisUnits } = useTimeAxisUnits()
+
+const textFormant = computed(() => {
+  return (str: string) => {
+    return { str: `${str}`, key: generateRandomKey() }
+  }
+})
 </script>
 
 <style>

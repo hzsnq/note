@@ -14,17 +14,16 @@
     </div>
 
     <div class="g-timeunits-container">
-      <div v-for="({ label, value, date, width }, index) in timeAxisUnits.lowerUnits" :key="label" class="g-timeunit"
-        :style="{
+      <div v-for="({ label, value, date, width }, index) in timeAxisUnits.lowerUnits" :key="textFormant(label).key"
+        class="g-timeunit" :style="{
           background: index % 2 === 0 ? colors.ternary : colors.quartenary,
           color: colors.text,
           flexDirection: precision === 'hour' ? 'column' : 'row',
           alignItems: precision === 'hour' ? '' : 'center',
-          width,
-          // flexShrink: 0
+          width
         }">
         <slot name="timeunit" :label="label" :value="value" :date="date">
-          {{ label }}
+          {{ textFormant(label).str }}
         </slot>
         <div v-if="precision === 'hour'" class="g-timeaxis-hour-pin" :style="{ background: colors.text }" />
       </div>
@@ -34,10 +33,16 @@
 
 <script setup lang="ts">
 import provideConfig from "../provider/provideConfig.js"
-import usetimeAxisUnits from "../composables/useTimeAxisUnits.js"
+import { useTimeAxisUnits, generateRandomKey } from "../composables/useTimeAxisUnits.js"
 
 const { precision, colors } = provideConfig()
-const { timeAxisUnits } = usetimeAxisUnits()
+const { timeAxisUnits } = useTimeAxisUnits()
+
+const textFormant = computed(() => {
+  return (str: string) => {
+    return { str: `${str}`, key: generateRandomKey() }
+  }
+})
 </script>
 
 <style>

@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import useDayjsHelper from './useDayjsHelper.js'
 import provideConfig from '../provider/provideConfig.js'
 
-export default function usetimeAxisUnits() {
+export function useTimeAxisUnits() {
   const { precision } = provideConfig()
   const { chartStartDayjs, chartEndDayjs } = useDayjsHelper()
 
@@ -35,12 +35,20 @@ export default function usetimeAxisUnits() {
     }
   })
 
-  const displayFormats = {
+  const lowerUnitsDisplayFormats = {
     hour: 'HH',
     date: 'DD.MMM',
-    day: 'DD',
-    week: 'WW',
-    month: 'MMMM',
+    day: 'D',
+    week: '第W周',
+    month: 'MMM',
+    year: 'YYYY'
+  }
+  const upperUnitsDisplayFormats = {
+    hour: 'HH',
+    date: 'DD.MMM',
+    day: 'MMM',
+    week: 'M月，YYYY年',
+    month: 'YYYY年',
     year: 'YYYY'
   }
 
@@ -55,7 +63,7 @@ export default function usetimeAxisUnits() {
 
     while (currentLowerUnit.isSameOrBefore(chartEndDayjs.value)) {
       const endCurrentLowerUnit = currentLowerUnit.endOf(lowerUnit)
-      const isLastItem = endCurrentLowerUnit.isAfter(chartEndDayjs.value)
+      // const isLastItem = endCurrentLowerUnit.isAfter(chartEndDayjs.value)
 
       // const lowerWidth = isLastItem
       //   ? (chartEndDayjs.value.diff(currentLowerUnit, 'minutes', true) / totalMinutes) * 100
@@ -64,7 +72,7 @@ export default function usetimeAxisUnits() {
         (endCurrentLowerUnit.diff(currentLowerUnit, 'minutes', true) / totalMinutes) * 100
 
       lowerUnits.push({
-        label: currentLowerUnit.format(displayFormats[precision?.value]),
+        label: currentLowerUnit.format(lowerUnitsDisplayFormats[precision?.value]),
         value: String(currentLowerUnit),
         date: currentLowerUnit.toDate(),
         width: String(lowerWidth) + '%'
@@ -75,14 +83,16 @@ export default function usetimeAxisUnits() {
     }
     while (currentUpperUnit.isSameOrBefore(chartEndDayjs.value)) {
       const endCurrentUpperUnit = currentUpperUnit.endOf(upperUnit)
-      const isLastItem = endCurrentUpperUnit.isAfter(chartEndDayjs.value)
+      // const isLastItem = endCurrentUpperUnit.isAfter(chartEndDayjs.value)
 
-      const upperWidth = isLastItem
-        ? (chartEndDayjs.value.diff(currentUpperUnit, 'minutes', true) / totalMinutes) * 100
-        : (endCurrentUpperUnit.diff(currentUpperUnit, 'minutes', true) / totalMinutes) * 100
+      // const upperWidth = isLastItem
+      //   ? (chartEndDayjs.value.diff(currentUpperUnit, 'minutes', true) / totalMinutes) * 100
+      //   : (endCurrentUpperUnit.diff(currentUpperUnit, 'minutes', true) / totalMinutes) * 100
+      const upperWidth =
+        (endCurrentUpperUnit.diff(currentUpperUnit, 'minutes', true) / totalMinutes) * 100
 
       upperUnits.push({
-        label: currentUpperUnit.format(displayFormats[upperUnit]),
+        label: currentUpperUnit.format(upperUnitsDisplayFormats[precision?.value]),
         value: String(currentUpperUnit),
         date: currentUpperUnit.toDate(),
         width: String(upperWidth) + '%'
@@ -96,4 +106,14 @@ export default function usetimeAxisUnits() {
   return {
     timeAxisUnits
   }
+}
+
+export function generateRandomKey(length = 16) {
+  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let key = ''
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length)
+    key += charset[randomIndex]
+  }
+  return key
 }

@@ -28,10 +28,10 @@ import provideConfig from "../provider/provideConfig.js"
 
 const TOOLTIP_FORMATS = {
   hour: "HH:mm",
-  day: "DD. MMM HH:mm",
-  date: "DD. MMMM YYYY",
-  month: "DD. MMMM YYYY",
-  week: "DD. MMMM YYYY (WW)"
+  day: "YYYY-MM-DD",
+  date: "YYYY-MM-DD",
+  month: "YYYY-MM-DD",
+  week: "YYYY-MM-DD"
 } as const
 
 const DEFAULT_DOT_COLOR = "cadetblue"
@@ -80,9 +80,11 @@ const tooltipContent = computed(() => {
     return ""
   }
   const format = TOOLTIP_FORMATS[precision.value]
+  console.log("🚀 ~ tooltipContent ~ format:", format)
+
   const barStartFormatted = toDayjs(barStartRaw.value).format(format)
   const barEndFormatted = toDayjs(barEndRaw.value).format(format)
-  return `${barStartFormatted} \u2013 ${barEndFormatted}`
+  return `${barStartFormatted} - ${barEndFormatted}`
 })
 </script>
 
